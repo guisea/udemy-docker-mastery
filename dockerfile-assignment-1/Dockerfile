@@ -35,3 +35,20 @@
 # Node Docker Good Defaults sample project on GitHub to change this Dockerfile for 
 # better local development with more advanced topics
 # https://github.com/BretFisher/node-docker-good-defaults
+FROM node:carbon-alpine
+
+# Add tini and make directory to store the application
+RUN apk --no-cache add tini && \
+    mkdir -p /usr/src/app
+
+# Copy all files from the current directory into the container
+COPY ./ /usr/src/app
+
+WORKDIR /usr/src/app
+
+RUN npm install && npm cache clean --force
+
+EXPOSE 80:3000
+CMD /sbin/tini -- node ./bin/www
+
+
